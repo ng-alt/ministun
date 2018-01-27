@@ -1,10 +1,4 @@
-#CROSS=mipsel-uclibc-
-CC=$(CROSS)gcc
-LD=$(CROSS)ld
-AR=$(CROSS)ar
-RANLIB=$(CROSS)ranlib
-
-CCFLAGS+=-Os -Wall -I. -Wno-pointer-sign -fomit-frame-pointer
+CCFLAGS+=-Os -Wall -I. -Wno-pointer-sign -fomit-frame-pointer $(EXTRACFLAGS)
 LDFLAGS+=-s
 LIBS=
 
@@ -18,6 +12,10 @@ $(PACKAGE): $(PACKAGE).o $(LIBS)
 
 %.o: %.c %.h
 	$(CC) $(CCFLAGS) -c $<
+
+install: all
+	$(STRIP) $(PACKAGE)
+	install -D $(PACKAGE) $(INSTALLDIR)/usr/sbin/$(PACKAGE)
 
 clean:
 	rm -f *.o $(PACKAGE)
